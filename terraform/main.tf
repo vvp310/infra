@@ -7,19 +7,19 @@ provider "google" {
   # Версия провайдера  
   version = "2.20"  
   # ID проекта  
-  project = "project-44470"
-  region = "europ44470 -west-1"
+  project = "${var.project}"
+  region = "${var.region}"
 }
 
 resource "google_compute_instance" "app" {
   name         	= "reddit-app"
   machine_type 	= "g1-small"
-  zone         	= "europe-west1-b"
+  zone         	= "${var.zone}"
   tags		= ["reddit-app"]
   # определение загрузочного диска
   boot_disk {
     initialize_params {
-      image = "reddit-base"
+      image = "${var.disk_image}"
     }
   }
   # определение сетевого интерфейса
@@ -31,14 +31,14 @@ resource "google_compute_instance" "app" {
   }
   metadata {
     # путьдопубличногоключа
-    ssh-keys = "vvp030303:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "vvp030303:${file(var.public_key_path)}"
   }
   connection {
     type          = "ssh"
     user          = "vvp030303"
     agent         = false
     # путьдоприватногоключа
-    private_key   = "${file("~/.ssh/id_rsa")}"
+    private_key   = "${file(var.private_key_path)}"
   }
   provisioner "file" {
     source        = "files/puma.service"
