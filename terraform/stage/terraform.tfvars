@@ -1,0 +1,6 @@
+project = "project-44470"
+public_key_path = "~/.ssh/id_rsa.pub"
+disk_image = "reddit-base"
+private_key_path = "~/.ssh/id_rsa"
+app_disk_image = "reddit-app-base"
+db_disk_image = "reddit-db-base"
