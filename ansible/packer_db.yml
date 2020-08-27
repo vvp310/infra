@@ -1,0 +1,33 @@
+---
+- name: Install MongoDB 3.2
+  hosts: all
+  become: true
+  tasks:
+    - name: Copy distr
+      get_url: 
+        url: "{{ item }}" 
+        dest: /tmp/
+        mode: 0777
+      loop:
+        - http://repo.mongodb.org/apt/ubuntu/dists/xenial/mongodb-org/3.2/multiverse/binary-amd64/mongodb-org-server_3.2.22_amd64.deb
+        - http://repo.mongodb.org/apt/ubuntu/dists/xenial/mongodb-org/3.2/multiverse/binary-amd64/mongodb-org-shell_3.2.22_amd64.deb
+        - http://repo.mongodb.org/apt/ubuntu/dists/xenial/mongodb-org/3.2/multiverse/binary-amd64/mongodb-org-mongos_3.2.22_amd64.deb
+        - http://repo.mongodb.org/apt/ubuntu/dists/xenial/mongodb-org/3.2/multiverse/binary-amd64/mongodb-org-tools_3.2.22_amd64.deb
+        - http://repo.mongodb.org/apt/ubuntu/dists/xenial/mongodb-org/3.2/multiverse/binary-amd64/mongodb-org_3.2.22_amd64.deb
+    - name: Install deb 
+      tags: deb-tag
+      apt:
+        deb: "{{ item }}"
+        state: present
+      loop:
+        - /tmp/mongodb-org-server_3.2.22_amd64.deb
+        - /tmp/mongodb-org-shell_3.2.22_amd64.deb
+        - /tmp/mongodb-org-mongos_3.2.22_amd64.deb
+        - /tmp/mongodb-org-tools_3.2.22_amd64.deb
+        - /tmp/mongodb-org_3.2.22_amd64.deb
+    - name: Enable service
+      tags: mongo_on
+      systemd:
+        name: mongod
+        enabled: yes
+
